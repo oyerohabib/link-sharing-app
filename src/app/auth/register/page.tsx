@@ -1,25 +1,22 @@
 import Link from "next/link";
 import Image from "next/image";
-import DevLinkLogo from "/public/devLinkLogo.svg";
+import DevLinkLogo from "/public/images/devLinkLogo.svg";
 
 export default function Signup() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <div className="flex justify-center mb-6">
-          <Image
-            src={DevLinkLogo}
-            width={"10"}
-            height={"10"}
-            alt="Devlinks"
-            className="h-10 w-10"
-          />
+        <div className="flex items-center gap-2 justify-center mb-6">
+          <Image src={DevLinkLogo} width={183} height={40} alt="Devlink logo" />
         </div>
-        <h2 className="text-2xl font-bold text-center">Sign Up</h2>
+        <h2 className="text-4xl font-bold">Create account</h2>
+        <h3 className="font-normal text-base text-grey">
+          Let’s get you started sharing your links!
+        </h3>
         <form className="mt-8 space-y-6">
           <div className="rounded-md shadow-sm">
             <div>
-              <label htmlFor="email-address" className="sr-only">
+              <label htmlFor="email-address" className="">
                 Email address
               </label>
               <input
@@ -32,21 +29,24 @@ export default function Signup() {
               />
             </div>
             <div className="mt-4">
-              <label htmlFor="password" className="sr-only">
-                Password
+              <label htmlFor="password" className="">
+                Create password
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Password"
-              />
+              <div className="relative flex items-center gap-3">
+                <span className="absolute">icon</span>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Password"
+                />
+              </div>
             </div>
             <div className="mt-4">
-              <label htmlFor="confirm-password" className="sr-only">
-                Confirm Password
+              <label htmlFor="confirm-password" className="">
+                Confirm password
               </label>
               <input
                 id="confirm-password"
