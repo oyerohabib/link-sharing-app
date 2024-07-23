@@ -3,12 +3,13 @@ import Image from "next/image";
 import DevLinkLogo from "/public/images/devLinkLogo.svg";
 import { AiOutlineMail } from "react-icons/ai";
 import InputField from "@/app/components/InputField";
+import { IoIosLock } from "react-icons/io";
 
-export default function Signup() {
+export default function Register() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-[476px]">
-        <div className="flex items-center gap-2 justify-center mb-6">
+        <div className="flex items-center gap-2 justify-center mb-10">
           <Image src={DevLinkLogo} width={183} height={40} alt="Devlink logo" />
         </div>
         <div className="bg-white rounded-lg p-8 space-y-6">
@@ -34,7 +35,7 @@ export default function Signup() {
                 required
                 label="Create password"
                 placeholder="At least 8 characters"
-                icon={AiOutlineMail}
+                icon={IoIosLock}
               />
 
               <InputField
@@ -44,7 +45,7 @@ export default function Signup() {
                 required
                 label="Confirm password"
                 placeholder="Confirm Password"
-                icon={AiOutlineMail}
+                icon={IoIosLock}
               />
             </div>
             <p className="text-grey text-xs font-normal">
@@ -61,7 +62,7 @@ export default function Signup() {
           </form>
           <div className="flex justify-center mt-4 text-base font-normal">
             <span className="text-grey">Already have an account?&nbsp;</span>
-            <Link href="/login" className="text-purple hover:underline">
+            <Link href="/auth/login" className="text-purple hover:underline">
               Login
             </Link>
           </div>
