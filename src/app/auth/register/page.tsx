@@ -8,8 +8,11 @@ import { AiOutlineMail } from "react-icons/ai";
 import { IoIosLock } from "react-icons/io";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import Spinner from "@/app/components/Spinner";
 
 export default function Register() {
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -20,13 +23,17 @@ export default function Register() {
 
   const handleRegistration = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      await signUp(data.email, data.password);
+      const response = await signUp(data.email, data.password);
       router.push("/");
+      toast.success(
+        "Congratulations 🎉🎉🎉. Your have successfully created an account."
+      );
     } catch (error: any) {
-      alert(error.message);
+      toast.error(error.message);
     }
-    console.log(data);
+    setLoading(false);
   };
 
   const { ...allData } = data;
@@ -97,7 +104,7 @@ export default function Register() {
                 className="w-full py-2 text-white font-semibold text-base h-[46px] p-[11px_27px] bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-25"
                 disabled={!canSubmit}
               >
-                Create new account
+                {loading ? <Spinner /> : "Create new account"}
               </button>
             </div>
           </form>

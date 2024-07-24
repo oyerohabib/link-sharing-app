@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import { AuthContextProvider } from "./context/AuthContext";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const instrumentsans = Instrument_Sans({ subsets: ["latin"] });
 
@@ -25,6 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={instrumentsans.className}>
         <AuthContextProvider>{children}</AuthContextProvider>
+        <ToastContainer position="bottom-right" />
       </body>
     </html>
   );
