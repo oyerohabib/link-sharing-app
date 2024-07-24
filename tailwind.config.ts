@@ -17,6 +17,11 @@ const config: Config = {
         "borders": "#D9D9D9",
         "light-grey": "#FAFAFA",
         "red": "#FF3939",
+        "github": "#1A1A1A",
+        "youtube": "#EE3939",
+        "linkedin": "#2D68FF",
+        "codewars": "#8A1A50",
+        "freecodecamp": "#302267",
       }
     },
   },
