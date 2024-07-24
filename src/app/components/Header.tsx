@@ -10,13 +10,15 @@ export default function Header() {
   return (
     <header className="flex items-center justify-between p-4 bg-white shadow-md">
       <div className="flex items-center">
-        <Image
-          src={DevLinkLogo}
-          width={183}
-          height={40}
-          alt="Devlinks"
-          className="mr-2"
-        />
+        <Link href={"/"}>
+          <Image
+            src={DevLinkLogo}
+            width={183}
+            height={40}
+            alt="Devlinks"
+            className="mr-2"
+          />
+        </Link>
       </div>
       <div className="flex items-center space-x-4 transition duration-200">
         <Link
