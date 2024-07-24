@@ -6,9 +6,9 @@ import { SiCodewars } from "react-icons/si";
 import { AiOutlineYoutube, AiFillLinkedin } from "react-icons/ai";
 
 interface SidebarProps {
-  width: string;
-  className: string;
-  padding: string;
+  width?: string;
+  className?: string;
+  padding?: string;
 }
 
 const profile = {
@@ -36,12 +36,12 @@ export default function Sidebar({ width, className, padding }: SidebarProps) {
       url: "https://codewars.com/benwright",
       icon: SiCodewars,
     },
-    // {
-    //   platform: "FreeCodeCamp",
-    //   url: "https://freecodecamp.com/benwright",
-    //   icon: FaCodepen,
-    // },
-    // { platform: "Dev.To", url: "https://dev.to/benwright", icon: FaDev },
+    {
+      platform: "FreeCodeCamp",
+      url: "https://freecodecamp.com/benwright",
+      icon: FaCodepen,
+    },
+    { platform: "Dev.To", url: "https://dev.to/benwright", icon: FaDev },
   ]);
   return (
     <div
