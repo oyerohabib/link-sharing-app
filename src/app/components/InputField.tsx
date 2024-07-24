@@ -1,3 +1,4 @@
+import { ChangeEventHandler } from "react";
 import { IconType } from "react-icons";
 
 interface InputFieldProps {
@@ -8,6 +9,8 @@ interface InputFieldProps {
   placeholder?: string;
   label?: string;
   icon?: IconType;
+  value?: string;
+  onChange?: ChangeEventHandler;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -18,6 +21,8 @@ const InputField: React.FC<InputFieldProps> = ({
   placeholder = "",
   label = "",
   icon: Icon,
+  value,
+  onChange,
 }) => {
   return (
     <div className="mt-4">
@@ -39,6 +44,8 @@ const InputField: React.FC<InputFieldProps> = ({
           required={required}
           className="block w-full py-3 px-10 border border-borders rounded-lg focus:outline-none focus:ring-purple focus:border-purple"
           placeholder={placeholder}
+          value={value}
+          onChange={onChange}
         />
       </div>
     </div>
