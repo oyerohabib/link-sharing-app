@@ -12,7 +12,7 @@ const ProfileDetailsPage: React.FC = () => {
     image: "/profile-image.jpg",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setProfile((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 

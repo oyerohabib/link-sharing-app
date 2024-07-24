@@ -5,7 +5,20 @@ import { FaDev, FaCodepen, FaArrowRight } from "react-icons/fa";
 import { SiCodewars } from "react-icons/si";
 import { AiOutlineYoutube, AiFillLinkedin } from "react-icons/ai";
 
-export default function Sidebar() {
+interface SidebarProps {
+  width: string;
+  className: string;
+  padding: string;
+}
+
+const profile = {
+  firstName: "Ben",
+  lastName: "Wright",
+  email: "ben@example.com",
+  image: "/profile-image.jpg",
+};
+
+export default function Sidebar({ width, className, padding }: SidebarProps) {
   const [links, setLinks] = useState([
     { platform: "GitHub", url: "https://github.com/benwright", icon: FiGithub },
     {
@@ -23,29 +36,33 @@ export default function Sidebar() {
       url: "https://codewars.com/benwright",
       icon: SiCodewars,
     },
-    {
-      platform: "FreeCodeCamp",
-      url: "https://freecodecamp.com/benwright",
-      icon: FaCodepen,
-    },
-    { platform: "Dev.To", url: "https://dev.to/benwright", icon: FaDev },
+    // {
+    //   platform: "FreeCodeCamp",
+    //   url: "https://freecodecamp.com/benwright",
+    //   icon: FaCodepen,
+    // },
+    // { platform: "Dev.To", url: "https://dev.to/benwright", icon: FaDev },
   ]);
   return (
-    <div className="w-full md:w-2/5 p-4 flex">
-      <div className="w-full bg-white p-4 shadow-md rounded">
+    <div
+      className={`p-4 flex ${width ? width : "w-full md:w-2/5"} ${className}`}
+    >
+      <div
+        className={`${
+          padding ? padding : "p-4"
+        } w-full bg-white p-4 shadow-md rounded-3xl`}
+      >
         <div className="mb-4 text-center">
-          <div className="w-24 h-24 rounded-full bg-borders mx-auto"></div>
-          <h1 className="text-xl font-bold mt-2">Ben Wright</h1>
-          <a href="https://benwright.com" className="text-purple-500">
-            benwright.com
-          </a>
+          <div className="size-28 rounded-full bg-borders mx-auto mb-6"></div>
+          <h1 className="text-3xl text-dark-grey font-bold mb-2">{`${profile.firstName} ${profile.lastName}`}</h1>
+          <p className="text-grey mb-14">{profile.email}</p>
         </div>
         <div>
           {links.map((link, index) => (
             <a
               key={index}
               href={link.url}
-              className={`flex items-center gap-2 p-4 mb-2 rounded-xl text-white ${getColor(
+              className={`flex items-center gap-2 p-4 mb-5 rounded-xl text-white ${getColor(
                 link.platform
               )}`}
               target="_blank"
