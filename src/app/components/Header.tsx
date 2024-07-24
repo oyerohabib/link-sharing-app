@@ -8,7 +8,7 @@ import { FaLink } from "react-icons/fa6";
 export default function Header() {
   const pathname = usePathname();
   return (
-    <header className="flex items-center justify-between p-4 bg-white shadow-md">
+    <header className="flex items-center justify-between p-4 bg-white shadow-md rounded-xl">
       <div className="flex items-center">
         <Link href={"/"}>
           <Image

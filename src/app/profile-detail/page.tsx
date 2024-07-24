@@ -19,12 +19,12 @@ const ProfileDetailsPage: React.FC = () => {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-light-grey p-6">
         <Header />
-        <main className="flex flex-col md:flex-row">
+        <main className="flex flex-col md:flex-row gap-6">
           <Sidebar />
-          <div className="w-full md:w-3/5 p-4">
-            <div className="bg-white p-10 shadow-md rounded">
+          <div className="w-full md:w-3/5 py-4">
+            <div className="bg-white p-10 shadow-md rounded-xl">
               <h2 className="text-3xl font-bold text-dark-grey mb-4">
                 Profile Details
               </h2>

@@ -68,6 +68,7 @@ export default function Login() {
                 icon={AiOutlineMail}
                 value={data.email}
                 onChange={handleChange}
+                autoComplete="off"
               />
               <InputField
                 id="password"
@@ -79,6 +80,7 @@ export default function Login() {
                 icon={IoIosLock}
                 value={data.password}
                 onChange={handleChange}
+                autoComplete="off"
               />
             </div>
             <div>

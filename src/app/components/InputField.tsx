@@ -11,6 +11,8 @@ interface InputFieldProps {
   icon?: IconType;
   value?: string;
   onChange?: ChangeEventHandler;
+  autoComplete?: string;
+  pattern?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -23,6 +25,8 @@ const InputField: React.FC<InputFieldProps> = ({
   icon: Icon,
   value,
   onChange,
+  autoComplete,
+  pattern,
 }) => {
   return (
     <div className="mt-4">
@@ -46,6 +50,8 @@ const InputField: React.FC<InputFieldProps> = ({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          autoComplete={autoComplete}
+          pattern={pattern}
         />
       </div>
     </div>

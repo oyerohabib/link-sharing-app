@@ -45,12 +45,12 @@ export default function Sidebar({ width, className, padding }: SidebarProps) {
   ]);
   return (
     <div
-      className={`p-4 flex ${width ? width : "w-full md:w-2/5"} ${className}`}
+      className={`py-4 flex ${width ? width : "w-full md:w-2/5"} ${className}`}
     >
       <div
         className={`${
           padding ? padding : "p-4"
-        } w-full bg-white p-4 shadow-md rounded-3xl`}
+        } w-full bg-white p-4 shadow-md rounded-xl`}
       >
         <div className="mb-4 text-center">
           <div className="size-28 rounded-full bg-borders mx-auto mb-6"></div>
