@@ -37,7 +37,7 @@ const InputField: React.FC<InputFieldProps> = ({
           name={name}
           type={type}
           required={required}
-          className="block w-full py-3 px-10 border border-borders rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          className="block w-full py-3 px-10 border border-borders rounded-lg focus:outline-none focus:ring-purple focus:border-purple"
           placeholder={placeholder}
         />
       </div>
