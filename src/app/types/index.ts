@@ -4,6 +4,7 @@ export interface User {
   lastName: string;
   profilePicture: string;
   email: string;
+  links: Array<any>;
 }
 export interface Link {
   platform: string;

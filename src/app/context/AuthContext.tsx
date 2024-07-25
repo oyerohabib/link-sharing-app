@@ -5,10 +5,13 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  UserCredential,
 } from "firebase/auth";
 import { auth } from "@/app/firebase/clientApp";
 import Loading from "../components/Loading";
 import { useRouter } from "next/navigation";
+import { createUserDocument } from "../auth/lib/firebase";
+import { v4 as uuid } from "uuid";
 
 interface UserType {
   email: string | null;
@@ -24,6 +27,7 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const newUuid = uuid();
   const router = useRouter();
   const [user, setUser] = useState<UserType>({ email: null, uid: null });
   const [loading, setLoading] = useState<Boolean>(true);
@@ -45,8 +49,25 @@ export const AuthContextProvider = ({
     return () => unsubscribe();
   }, []);
 
-  const signUp = (email: string, password: string) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+  const signUp = async (email: string, password: string) => {
+    try {
+      const userCredential: UserCredential =
+        await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      // Call createUserDocument after the user is created
+      await createUserDocument({
+        email: user.email,
+        firstName: "",
+        lastName: "",
+        links: [],
+        uid: user.uid,
+        profilePicture: "",
+      });
+      return user;
+    } catch (error) {
+      console.error("Error during sign-up: ", error);
+      throw error;
+    }
   };
 
   const logIn = (email: string, password: string) => {

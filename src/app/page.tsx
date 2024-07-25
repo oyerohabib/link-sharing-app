@@ -11,14 +11,7 @@ import GetStarted from "/public/images/GetStarted.svg";
 import { FaGripLines } from "react-icons/fa";
 import { db } from "./firebase/clientApp";
 import { useAuth } from "./context/AuthContext";
-import {
-  doc,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
-  getDoc,
-} from "firebase/firestore";
-import { User, Link } from "@/app/types";
+import { Link } from "@/app/types";
 import { fetchLinks, addLink, removeLink } from "./auth/lib/firebase";
 
 const HomePage: React.FC = () => {
@@ -73,6 +66,8 @@ const HomePage: React.FC = () => {
   };
 
   const handleNewLinkChange = (field: string, value: string) => {
+    console.log(field, value);
+    console.log("newLink", newLink);
     setNewLink({ ...newLink, [field]: value });
   };
 

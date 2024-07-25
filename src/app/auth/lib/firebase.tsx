@@ -17,6 +17,8 @@ export const createUserDocument = async (user: User) => {
       lastName: user.lastName,
       email: user.email,
       links: [],
+      uid: user.uid,
+      profilePicture: user.profilePicture,
     });
     console.log("User document created successfully.");
   } catch (error) {
