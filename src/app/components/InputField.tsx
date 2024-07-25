@@ -1,4 +1,4 @@
-import { ChangeEventHandler } from "react";
+import { ChangeEvent } from "react";
 import { IconType } from "react-icons";
 
 interface InputFieldProps {
@@ -10,7 +10,7 @@ interface InputFieldProps {
   label?: string;
   icon?: IconType;
   value?: string;
-  onChange?: ChangeEventHandler;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   autoComplete?: string;
   pattern?: string;
 }

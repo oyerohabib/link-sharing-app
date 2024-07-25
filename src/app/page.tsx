@@ -10,6 +10,7 @@ import Image from "next/image";
 import GetStarted from "/public/images/GetStarted.svg";
 import { FaGripLines } from "react-icons/fa";
 import { db } from "./firebase/clientApp";
+import { useAuth } from "./context/AuthContext";
 import {
   doc,
   updateDoc,
@@ -45,7 +46,7 @@ const fetchLinks = async (db: any, userId: string): Promise<Link[]> => {
   }
 };
 
-const addLink = async (db: any, userId: string, link: Link): Promise<void> => {
+const addLink = async (userId: string, link: Link): Promise<void> => {
   try {
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, {
@@ -57,11 +58,7 @@ const addLink = async (db: any, userId: string, link: Link): Promise<void> => {
   }
 };
 
-const removeLink = async (
-  db: any,
-  userId: string,
-  link: Link
-): Promise<void> => {
+const removeLink = async (userId: string, link: Link): Promise<void> => {
   try {
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, {
@@ -80,9 +77,13 @@ const HomePage: React.FC = () => {
   //   { id: 3, platform: "LinkedIn", url: "https://linkedin.com/in/benwright" },
   // ]);
 
+  const { user } = useAuth();
   const [links, setLinks] = useState([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [newLink, setNewLink] = useState<Link | null>(null);
+  const [newLink, setNewLink] = useState<Link | null>({
+    platform: "",
+    url: "",
+  });
 
   const addNewLink = () => {
     setIsEditing(true);
@@ -96,7 +97,7 @@ const HomePage: React.FC = () => {
     getLinks();
   }, [user.uid]);
 
-  const handleAddLink = async (newLink: string) => {
+  const handleAddLink = async (newLink) => {
     await addLink(user.uid, newLink);
     setLinks([...links, newLink]);
   };
@@ -155,7 +156,7 @@ const HomePage: React.FC = () => {
                       </span>
                       <span
                         className="cursor-pointer hover:underline"
-                        onClick={() => removeLink(link.platform)}
+                        onClick={() => handleRemoveLink(link.platform)}
                       >
                         Remove
                       </span>
