@@ -18,58 +18,8 @@ import {
   arrayRemove,
   getDoc,
 } from "firebase/firestore";
-interface User {
-  uid: string;
-  firstName: string;
-  lastName: string;
-  profilePicture: string;
-  email: string;
-}
-interface Link {
-  platform: string;
-  url: string;
-}
-
-const fetchLinks = async (db: any, userId: string): Promise<Link[]> => {
-  try {
-    const userRef = doc(db, "users", userId);
-    const userDoc = await getDoc(userRef);
-    if (userDoc.exists()) {
-      console.log("links fetched successfully");
-      return userDoc.data()?.links || [];
-    } else {
-      console.log("No such document!");
-      return [];
-    }
-  } catch (error) {
-    console.error("Error fetching links: ", error);
-    return [];
-  }
-};
-
-const addLink = async (userId: string, link: Link): Promise<void> => {
-  try {
-    const userRef = doc(db, "users", userId);
-    await updateDoc(userRef, {
-      links: arrayUnion(link),
-    });
-    console.log("Link added successfully.");
-  } catch (error) {
-    console.error("Error adding link: ", error);
-  }
-};
-
-const removeLink = async (userId: string, link: Link): Promise<void> => {
-  try {
-    const userRef = doc(db, "users", userId);
-    await updateDoc(userRef, {
-      links: arrayRemove(link),
-    });
-    console.log("Link removed successfully.");
-  } catch (error) {
-    console.error("Error removing link: ", error);
-  }
-};
+import { User, Link } from "@/app/types";
+import { fetchLinks, addLink, removeLink } from "./auth/lib/firebase";
 
 const HomePage: React.FC = () => {
   // const [links, setLinks] = useState([
