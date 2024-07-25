@@ -14,6 +14,7 @@ import { useAuth } from "./context/AuthContext";
 import { Link } from "@/app/types";
 import { fetchLinks, addLink, removeLink } from "./auth/lib/firebase";
 import { toast } from "react-toastify";
+import Spinner from "./components/Spinner";
 
 const HomePage: React.FC = () => {
   // const [links, setLinks] = useState([
@@ -24,6 +25,8 @@ const HomePage: React.FC = () => {
 
   const { user } = useAuth();
   const [links, setLinks] = useState<Link[]>([]);
+  const [loading, setIsLoading] = useState(false);
+  const [isRemovingLink, setIsRemovingLink] = useState(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newLink, setNewLink] = useState<Link>({ platform: "", url: "" });
 
@@ -42,6 +45,7 @@ const HomePage: React.FC = () => {
   }, [user?.uid]);
 
   const handleAddLink = async () => {
+    setIsLoading(true);
     if (newLink.platform && newLink.url) {
       await addLink(user.uid, newLink);
       toast.success("Link Added Successfully 🎉.");
@@ -49,15 +53,17 @@ const HomePage: React.FC = () => {
       setIsEditing(false);
       setNewLink({ platform: "", url: "" });
     } else {
-      toast.error("Error Adding Link");
-      console.error("Invalid link data");
+      toast.error("Enter appropriate values");
     }
+    setIsLoading(false);
   };
 
   const handleRemoveLink = async (platform: string) => {
     const linkToRemove = links.find((link) => link.platform === platform);
     if (linkToRemove) {
+      setIsRemovingLink(true);
       await removeLink(user.uid, linkToRemove);
+      setIsRemovingLink(false);
       toast.success("Link removed successfully.");
       setLinks(links.filter((link) => link.platform !== platform));
     }
@@ -111,7 +117,7 @@ const HomePage: React.FC = () => {
                         className="cursor-pointer hover:underline"
                         onClick={() => handleRemoveLink(link.platform)}
                       >
-                        Remove
+                        {isRemovingLink ? "removing..." : "Remove"}
                       </span>
                     </div>
                     <InputSelect
@@ -199,7 +205,7 @@ const HomePage: React.FC = () => {
                   className="px-6 py-3 bg-purple text-white rounded-lg flex ml-auto"
                   onClick={handleAddLink}
                 >
-                  Save
+                  {loading ? <Spinner /> : "Save"}
                 </button>
               )}
             </div>
