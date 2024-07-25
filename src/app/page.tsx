@@ -13,6 +13,7 @@ import { db } from "./firebase/clientApp";
 import { useAuth } from "./context/AuthContext";
 import { Link } from "@/app/types";
 import { fetchLinks, addLink, removeLink } from "./auth/lib/firebase";
+import { toast } from "react-toastify";
 
 const HomePage: React.FC = () => {
   // const [links, setLinks] = useState([
@@ -43,10 +44,12 @@ const HomePage: React.FC = () => {
   const handleAddLink = async () => {
     if (newLink.platform && newLink.url) {
       await addLink(user.uid, newLink);
+      toast.success("Link Added Successfully 🎉.");
       setLinks([...links, newLink]);
       setIsEditing(false);
       setNewLink({ platform: "", url: "" });
     } else {
+      toast.error("Error Adding Link");
       console.error("Invalid link data");
     }
   };
@@ -55,6 +58,7 @@ const HomePage: React.FC = () => {
     const linkToRemove = links.find((link) => link.platform === platform);
     if (linkToRemove) {
       await removeLink(user.uid, linkToRemove);
+      toast.success("Link removed successfully.");
       setLinks(links.filter((link) => link.platform !== platform));
     }
   };
@@ -135,12 +139,12 @@ const HomePage: React.FC = () => {
                   </div>
                 ))}
 
-              {isEditing || links.length > 0 ? (
-                <div className="mb-6 bg-light-grey p-5 rounded-xl">
+              {isEditing && (
+                <div className={`mb-6 bg-light-grey p-5 rounded-xl`}>
                   <div className="flex items-center justify-between text-grey mb-3">
                     <span className="flex gap-2 items-center">
                       <FaGripLines className="inline-block" />
-                      Link #1
+                      New Link
                     </span>
                     <span
                       className="cursor-pointer hover:underline"
@@ -168,7 +172,9 @@ const HomePage: React.FC = () => {
                     onChange={(e) => handleNewLinkChange("url", e.target.value)}
                   />
                 </div>
-              ) : (
+              )}
+
+              {links.length === 0 && !isEditing && (
                 <div className="flex flex-col items-center justify-center py-16 px-5 rounded-lg gap-6 bg-light-grey mb-6">
                   <Image
                     src={GetStarted}
