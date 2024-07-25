@@ -1,59 +1,81 @@
 import Image from "next/image";
 import Link from "next/link";
-import DevLinkLogo from "/public/images/devLinkLogo.svg";
+import DevLinkLogoLg from "/public/images/devLinkLogo.svg";
+import DevLinkLogoSm from "/public/images/favicon.svg";
 import { usePathname } from "next/navigation";
-import { IoPersonCircleOutline } from "react-icons/io5";
+import { IoPersonCircleOutline, IoLogOutOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa6";
+import { AiOutlineEye } from "react-icons/ai";
+import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
   const pathname = usePathname();
+  const { logOut } = useAuth();
   return (
     <header className="flex items-center justify-between p-4 bg-white shadow-md rounded-xl">
       <div className="flex items-center">
-        <Link href={"/"}>
+        <Link href={"/"} className="mr-auto">
           <Image
-            src={DevLinkLogo}
-            width={183}
-            height={40}
+            src={DevLinkLogoLg}
             alt="Devlinks"
-            className="mr-2"
+            className="mr-2 sm:h-[40px] lg:w-[183px] h-[28px] w-[125px] hidden sm:block"
+          />
+          <Image
+            src={DevLinkLogoSm}
+            alt="Devlinks"
+            className="mr-2 h-[40px] block sm:hidden"
           />
         </Link>
       </div>
-      <div className="flex items-center space-x-4 transition duration-200">
+      <div className="flex items-center space-x-3 transition duration-200">
         <Link
           href="/"
           className={`flex items-center gap-2 font-semibold text-base ${
             pathname === "/"
-              ? "p-[11px_27px] bg-light-purple rounded-lg text-purple"
-              : "text-grey"
+              ? "md:p-[11px_24px] sm:p-[6px_15px] p-[11px_27px] bg-light-purple rounded-lg text-purple"
+              : "text-grey hover:text-purple"
           }`}
         >
           <span>
             <FaLink />
           </span>
-          Links
+          <span className="hidden sm:block">Links</span>
         </Link>
         <Link
           href="/profile-detail"
           className={`flex items-center gap-2 font-semibold text-base ${
             pathname === "/profile-detail"
-              ? "p-[11px_27px] bg-light-purple rounded-lg text-purple"
-              : "text-grey"
+              ? "md:p-[11px_24px] sm:p-[6px_15px] p-[11px_27px] bg-light-purple rounded-lg text-purple"
+              : "text-grey hover:text-purple"
           }`}
         >
           <span>
             <IoPersonCircleOutline />
           </span>
-          Profile Details
+          <span className="hidden sm:block">Profile Details</span>
         </Link>
       </div>
-      <Link
-        href="/preview"
-        className="px-4 py-2 text-purple text-base font-semibold bg-purple-500 rounded-lg border border-purple"
-      >
-        Preview
-      </Link>
+      <div className="flex items-center gap-2">
+        <Link
+          href="/preview"
+          className="flex items-center gap-2 md:px-4 md:py-2 xs:px-3 xs:py-1 p-[11px_16px] text-purple text-base font-semibold rounded-lg border border-purple hover:bg-light-purple transition duration-200"
+        >
+          <span>
+            <AiOutlineEye />
+          </span>
+          <span className="hidden sm:block">Preview</span>
+        </Link>
+        <span
+          title="Logout"
+          className="flex items-center gap-2 md:px-4 md:py-2 xs:px-3 xs:py-2 p-[11px_16px] rounded-lg border text-purple border-purple hover:bg-light-purple transition duration-200"
+          onClick={logOut}
+        >
+          <span>
+            <IoLogOutOutline />
+          </span>
+          <span className="hidden md:block">Logout</span>
+        </span>
+      </div>
     </header>
   );
 }

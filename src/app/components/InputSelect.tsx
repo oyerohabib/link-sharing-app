@@ -10,11 +10,12 @@ import { SiCodewars } from "react-icons/si";
 
 interface InputSelectProps {
   label: string;
-  value: string;
-  onChange: (value: string) => void;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
 const socialMediaOptions = [
+  { label: "Select a platform", value: "", icon: null },
   { label: "GitHub", value: "github", icon: <FaGithub /> },
   { label: "YouTube", value: "youtube", icon: <FaYoutube /> },
   { label: "LinkedIn", value: "linkedin", icon: <FaLinkedin /> },
@@ -28,12 +29,17 @@ const InputSelect: React.FC<InputSelectProps> = ({
   value,
   onChange,
 }) => {
+  const selectedOption = socialMediaOptions.find(
+    (option) => option.value === value
+  );
   return (
     <div className="mb-4">
       <label className="text-xs text-dark-grey">{label}</label>
       <div className="relative">
         <select
-          className="w-full p-2 pl-10 pr-8 py-3 px-10 border border-borders rounded-lg appearance-none focus:ring-purple focus:border-purple"
+          className={`w-full p-2 ${
+            selectedOption?.icon ? "pl-10" : "pl-4"
+          } py-3 border border-borders rounded-lg appearance-none focus:ring-purple focus:border-purple`}
           value={value}
           onChange={(e) => onChange(e.target.value)}
         >
@@ -44,7 +50,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
           ))}
         </select>
         <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-          {socialMediaOptions.find((option) => option.value === value)?.icon}
+          {selectedOption?.icon}
         </div>
         <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
           <svg

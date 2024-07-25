@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@/app/firebase/clientApp";
 import Loading from "../components/Loading";
+import { useRouter } from "next/navigation";
 
 interface UserType {
   email: string | null;
@@ -23,6 +24,7 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const router = useRouter();
   const [user, setUser] = useState<UserType>({ email: null, uid: null });
   const [loading, setLoading] = useState<Boolean>(true);
 
@@ -52,8 +54,9 @@ export const AuthContextProvider = ({
   };
 
   const logOut = async () => {
+    await signOut(auth);
     setUser({ email: null, uid: null });
-    return await signOut(auth);
+    router.replace("/auth/login");
   };
 
   return (

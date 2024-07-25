@@ -4,11 +4,13 @@ import { FiGithub } from "react-icons/fi";
 import { FaDev, FaCodepen, FaArrowRight } from "react-icons/fa";
 import { SiCodewars } from "react-icons/si";
 import { AiOutlineYoutube, AiFillLinkedin } from "react-icons/ai";
+import { usePathname } from "next/navigation";
 
 interface SidebarProps {
   width?: string;
   className?: string;
   padding?: string;
+  shadow?: string;
 }
 
 const profile = {
@@ -18,7 +20,13 @@ const profile = {
   image: "/profile-image.jpg",
 };
 
-export default function Sidebar({ width, className, padding }: SidebarProps) {
+export default function Sidebar({
+  width,
+  className,
+  padding,
+  shadow,
+}: SidebarProps) {
+  const pathname = usePathname();
   const [links, setLinks] = useState([
     { platform: "GitHub", url: "https://github.com/benwright", icon: FiGithub },
     {
@@ -45,15 +53,17 @@ export default function Sidebar({ width, className, padding }: SidebarProps) {
   ]);
   return (
     <div
-      className={`py-4 flex ${width ? width : "w-full md:w-2/5"} ${className}`}
+      className={`py-4 ${width ? width : "w-full lg:w-2/5"} ${className} ${
+        pathname === "/preview" ? "" : "lg:flex hidden"
+      }`}
     >
       <div
-        className={`${
-          padding ? padding : "p-4"
-        } w-full bg-white p-4 shadow-md rounded-xl`}
+        className={`${padding} w-full bg-white ${
+          shadow ? shadow : "shadow-md"
+        } rounded-xl p-10`}
       >
         <div className="mb-4 text-center">
-          <div className="size-28 rounded-full bg-borders mx-auto mb-6"></div>
+          <div className="size-28 rounded-full bg-borders border-4 border-purple mx-auto mb-6"></div>
           <h1 className="text-3xl text-dark-grey font-bold mb-2">{`${profile.firstName} ${profile.lastName}`}</h1>
           <p className="text-grey mb-14">{profile.email}</p>
         </div>

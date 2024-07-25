@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import InputField from "./components/InputField";
@@ -8,38 +8,158 @@ import InputSelect from "./components/InputSelect";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Image from "next/image";
 import GetStarted from "/public/images/GetStarted.svg";
+import { FaGripLines } from "react-icons/fa";
+import { db } from "./firebase/clientApp";
+import {
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
+} from "firebase/firestore";
+interface User {
+  uid: string;
+  firstName: string;
+  lastName: string;
+  profilePicture: string;
+  email: string;
+}
+interface Link {
+  platform: string;
+  url: string;
+}
+
+const fetchLinks = async (db: any, userId: string): Promise<Link[]> => {
+  try {
+    const userRef = doc(db, "users", userId);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+      return userDoc.data()?.links || [];
+    } else {
+      console.log("No such document!");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching links: ", error);
+    return [];
+  }
+};
+
+const addLink = async (db: any, userId: string, link: Link): Promise<void> => {
+  try {
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, {
+      links: arrayUnion(link),
+    });
+    console.log("Link added successfully.");
+  } catch (error) {
+    console.error("Error adding link: ", error);
+  }
+};
+
+const removeLink = async (
+  db: any,
+  userId: string,
+  link: Link
+): Promise<void> => {
+  try {
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, {
+      links: arrayRemove(link),
+    });
+    console.log("Link removed successfully.");
+  } catch (error) {
+    console.error("Error removing link: ", error);
+  }
+};
 
 const HomePage: React.FC = () => {
-  const [links, setLinks] = useState([
-    { platform: "GitHub", url: "https://github.com/benwright" },
-    { platform: "YouTube", url: "https://youtube.com/benwright" },
-    // { platform: "LinkedIn", url: "https://linkedin.com/in/benwright" },
-  ]);
+  // const [links, setLinks] = useState([
+  //   { id: 1, platform: "GitHub", url: "https://github.com/benwright" },
+  //   { id: 2, platform: "YouTube", url: "https://youtube.com/benwright" },
+  //   { id: 3, platform: "LinkedIn", url: "https://linkedin.com/in/benwright" },
+  // ]);
+
+  const [links, setLinks] = useState([]);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [newLink, setNewLink] = useState<Link | null>(null);
+
+  const addNewLink = () => {
+    setIsEditing(true);
+  };
+
+  useEffect(() => {
+    const getLinks = async () => {
+      const userLinks = await fetchLinks(db, user.uid);
+      setLinks(userLinks);
+    };
+    getLinks();
+  }, [user.uid]);
+
+  const handleAddLink = async (newLink: string) => {
+    await addLink(user.uid, newLink);
+    setLinks([...links, newLink]);
+  };
+
+  const handleRemoveLink = async (platform) => {
+    const linkToRemove = links.find((link) => link.platform === platform);
+    if (linkToRemove) {
+      await removeLink(user.uid, linkToRemove);
+      setLinks(links.filter((link) => link.platform !== platform));
+    }
+  };
+
+  const handleInputChange = (index: number, field: string, value: string) => {
+    const newLinks = [...links];
+    newLinks[index] = { ...newLinks[index], [field]: value };
+    setLinks(newLinks);
+  };
+
+  const handleNewLinkChange = (field: string, value: string) => {
+    if (newLink) {
+      setNewLink({ ...newLink, [field]: value });
+    }
+  };
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-light-grey p-6">
+      <div className="min-h-screen bg-light-grey p-4 sm:p-6">
         <Header />
         <main className="flex flex-col md:flex-row gap-6">
           <Sidebar />
-          <div className="w-full md:w-3/5 py-4">
-            <div className="bg-white p-10 shadow-md rounded-xl">
-              <h2 className="text-3xl font-bold text-dark-grey mb-4">
+          <div className="w-full lg:w-3/5 py-4">
+            <div className="bg-white p-6 sm:p-10 shadow-md rounded-xl">
+              <h2 className="text-2xl sm:text-3xl font-bold text-dark-grey mb-4">
                 Customize your links
               </h2>
               <p className="text-grey text-base font-normal mb-8">
                 Add/edit/remove links below and then share all your profiles
                 with the world!
               </p>
-              <button className="w-full text-base font-semibold p-[11px_27px] border border-purple text-purple rounded-lg mb-6">
+              <button
+                className="w-full text-base font-semibold p-[11px_27px] border border-purple text-purple hover:bg-light-purple transition duration-200 rounded-lg mb-6"
+                onClick={addNewLink}
+              >
                 + Add new link
               </button>
-              {links.length > 0 ? (
+              {links.length > 0 &&
                 links.map((link, index) => (
                   <div
                     key={index}
                     className="mb-4 bg-light-grey p-5 rounded-xl"
                   >
+                    <div className="flex items-center justify-between text-grey mb-3">
+                      <span className="flex gap-2 items-center">
+                        <FaGripLines className="inline-block" />
+                        Link #{index + 1}
+                      </span>
+                      <span
+                        className="cursor-pointer hover:underline"
+                        onClick={() => removeLink(link.platform)}
+                      >
+                        Remove
+                      </span>
+                    </div>
                     <InputSelect
                       label="Platform"
                       value={link.platform}
@@ -57,11 +177,47 @@ const HomePage: React.FC = () => {
                       label="Link"
                       placeholder="Enter your Link"
                       icon={FiLink}
-                      // value={value}
-                      // onChange={onChange}
+                      value={link.url}
+                      onChange={(e) =>
+                        handleInputChange(index, "url", e.target.value)
+                      }
                     />
                   </div>
-                ))
+                ))}
+
+              {isEditing ? (
+                <div className="mb-4 bg-light-grey p-5 rounded-xl">
+                  <div className="flex items-center justify-between text-grey mb-3">
+                    <span className="flex gap-2 items-center">
+                      <FaGripLines className="inline-block" />
+                      Link #1
+                    </span>
+                    <span
+                      className="cursor-pointer hover:underline"
+                      onClick={() => setIsEditing(false)}
+                    >
+                      Remove
+                    </span>
+                  </div>
+                  <InputSelect
+                    label="Platform"
+                    value={newLink?.platform || ""}
+                    onChange={(newValue) =>
+                      handleNewLinkChange("platform", newValue)
+                    }
+                  />
+                  <InputField
+                    id="url"
+                    name="url"
+                    type="url"
+                    required
+                    label="Link"
+                    placeholder="Enter your Link"
+                    icon={FiLink}
+                    value={newLink?.url || ""}
+                    onChange={(e) => handleNewLinkChange("url", e.target.value)}
+                  />
+                </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-16 px-5 rounded-lg gap-6 bg-light-grey mb-6">
                   <Image
@@ -70,7 +226,7 @@ const HomePage: React.FC = () => {
                     height={160}
                     alt="Get started"
                   />
-                  <h2 className="text-3xl font-bold text-dark-grey">
+                  <h2 className="text-2xl xs:text-3xl font-bold text-dark-grey">
                     Let&apos;s get you started
                   </h2>
                   <p className="text-grey text-base font-normal mb-8 text-center max-w-[488px]">
@@ -82,9 +238,14 @@ const HomePage: React.FC = () => {
                 </div>
               )}
 
-              <button className="px-4 py-2 bg-purple text-white rounded-lg flex ml-auto">
-                Save
-              </button>
+              {isEditing && (
+                <button
+                  className="px-4 py-2 bg-purple text-white rounded-lg flex ml-auto"
+                  onClick={handleAddLink}
+                >
+                  Save
+                </button>
+              )}
             </div>
           </div>
         </main>

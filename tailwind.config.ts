@@ -22,6 +22,9 @@ const config: Config = {
         "linkedin": "#2D68FF",
         "codewars": "#8A1A50",
         "freecodecamp": "#302267",
+      },
+      screens: {
+        xs: "450px",
       }
     },
   },

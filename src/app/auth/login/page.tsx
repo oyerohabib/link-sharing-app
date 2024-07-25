@@ -46,17 +46,17 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-[476px]">
-        <div className="flex items-center gap-2 justify-center mb-10">
+    <div className="flex sm:items-center justify-center min-h-screen sm:bg-light-grey">
+      <div className="w-full xs:max-w-[476px] p-8">
+        <div className="flex sm:items-center gap-2 sm:justify-center mb-20 sm:mb-10">
           <Image src={DevLinkLogo} width={183} height={40} alt="Devlink logo" />
         </div>
-        <div className="bg-white rounded-lg p-8 space-y-6">
-          <h2 className="text-4xl font-bold">Login</h2>
+        <div className="bg-white rounded-lg sm:p-8 flex flex-col gap-2">
+          <h2 className="text-2xl sm:text-4xl font-bold">Login</h2>
           <h3 className="font-normal text-base text-grey">
             Add your details below to get back into the app
           </h3>
-          <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+          <form className="space-y-6" onSubmit={handleLogin}>
             <div className="rounded-md shadow-sm">
               <InputField
                 id="email"
