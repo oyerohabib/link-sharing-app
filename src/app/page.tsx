@@ -35,6 +35,7 @@ const fetchLinks = async (db: any, userId: string): Promise<Link[]> => {
     const userRef = doc(db, "users", userId);
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
+      console.log("links fetched successfully");
       return userDoc.data()?.links || [];
     } else {
       console.log("No such document!");
@@ -78,12 +79,9 @@ const HomePage: React.FC = () => {
   // ]);
 
   const { user } = useAuth();
-  const [links, setLinks] = useState([]);
+  const [links, setLinks] = useState<Link[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [newLink, setNewLink] = useState<Link | null>({
-    platform: "",
-    url: "",
-  });
+  const [newLink, setNewLink] = useState<Link>({ platform: "", url: "" });
 
   const addNewLink = () => {
     setIsEditing(true);
@@ -91,18 +89,26 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const getLinks = async () => {
-      const userLinks = await fetchLinks(db, user.uid);
-      setLinks(userLinks);
+      if (user?.uid) {
+        const userLinks = await fetchLinks(db, user.uid);
+        setLinks(userLinks);
+      }
     };
     getLinks();
-  }, [user.uid]);
+  }, [user?.uid]);
 
-  const handleAddLink = async (newLink) => {
-    await addLink(user.uid, newLink);
-    setLinks([...links, newLink]);
+  const handleAddLink = async () => {
+    if (newLink.platform && newLink.url) {
+      await addLink(user.uid, newLink);
+      setLinks([...links, newLink]);
+      setIsEditing(false);
+      setNewLink({ platform: "", url: "" });
+    } else {
+      console.error("Invalid link data");
+    }
   };
 
-  const handleRemoveLink = async (platform) => {
+  const handleRemoveLink = async (platform: string) => {
     const linkToRemove = links.find((link) => link.platform === platform);
     if (linkToRemove) {
       await removeLink(user.uid, linkToRemove);
@@ -117,9 +123,7 @@ const HomePage: React.FC = () => {
   };
 
   const handleNewLinkChange = (field: string, value: string) => {
-    if (newLink) {
-      setNewLink({ ...newLink, [field]: value });
-    }
+    setNewLink({ ...newLink, [field]: value });
   };
 
   return (
@@ -186,8 +190,8 @@ const HomePage: React.FC = () => {
                   </div>
                 ))}
 
-              {isEditing ? (
-                <div className="mb-4 bg-light-grey p-5 rounded-xl">
+              {isEditing || links.length > 0 ? (
+                <div className="mb-6 bg-light-grey p-5 rounded-xl">
                   <div className="flex items-center justify-between text-grey mb-3">
                     <span className="flex gap-2 items-center">
                       <FaGripLines className="inline-block" />
@@ -239,9 +243,9 @@ const HomePage: React.FC = () => {
                 </div>
               )}
 
-              {isEditing && (
+              {(isEditing || links.length > 0) && (
                 <button
-                  className="px-4 py-2 bg-purple text-white rounded-lg flex ml-auto"
+                  className="px-6 py-3 bg-purple text-white rounded-lg flex ml-auto"
                   onClick={handleAddLink}
                 >
                   Save

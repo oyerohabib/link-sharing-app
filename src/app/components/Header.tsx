@@ -67,7 +67,7 @@ export default function Header() {
         </Link>
         <span
           title="Logout"
-          className="flex items-center gap-2 md:px-4 md:py-2 xs:px-3 xs:py-2 p-[11px_16px] rounded-lg border text-purple border-purple hover:bg-light-purple transition duration-200"
+          className="flex items-center gap-2 md:px-4 md:py-2 xs:px-3 xs:py-2 p-[11px_16px] rounded-lg border text-purple border-purple hover:bg-light-purple transition duration-200 cursor-pointer"
           onClick={logOut}
         >
           <span>
