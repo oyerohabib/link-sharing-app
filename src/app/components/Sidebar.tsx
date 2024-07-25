@@ -29,30 +29,16 @@ export default function Sidebar({
   Newlinks,
 }: SidebarProps) {
   const pathname = usePathname();
-  const [links, setLinks] = useState([
-    { platform: "GitHub", url: "https://github.com/benwright", icon: FiGithub },
-    {
-      platform: "YouTube",
-      url: "https://youtube.com/benwright",
-      icon: AiOutlineYoutube,
-    },
-    {
-      platform: "LinkedIn",
-      url: "https://linkedin.com/in/benwright",
-      icon: AiFillLinkedin,
-    },
-    {
-      platform: "Codewars",
-      url: "https://codewars.com/benwright",
-      icon: SiCodewars,
-    },
-    {
-      platform: "FreeCodeCamp",
-      url: "https://freecodecamp.com/benwright",
-      icon: FaCodepen,
-    },
-    { platform: "Dev.To", url: "https://dev.to/benwright", icon: FaDev },
-  ]);
+
+  const mapPlatformToIcon = {
+    GitHub: FiGithub,
+    YouTube: AiOutlineYoutube,
+    LinkedIn: AiFillLinkedin,
+    Codewars: SiCodewars,
+    FreeCodeCamp: FaCodepen,
+    "Dev.To": FaDev,
+  };
+
   return (
     <div
       className={`py-4 ${width ? width : "w-full lg:w-2/5"} ${className} ${
@@ -70,23 +56,26 @@ export default function Sidebar({
           <p className="text-grey mb-14">{profile.email}</p>
         </div>
         <div>
-          {Newlinks.map((link, index) => (
-            <a
-              key={index}
-              href={link.url}
-              className={`flex items-center gap-2 p-4 mb-5 rounded-xl text-white ${getColor(
-                link.platform
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span>{/* <link.icon /> */}</span>
-              {link.platform}
-              <span className="ml-auto">
-                <FaArrowRight />
-              </span>
-            </a>
-          ))}
+          {Newlinks.map((link, index) => {
+            const IconComponent = mapPlatformToIcon[link.platform];
+            return (
+              <a
+                key={index}
+                href={link.url}
+                className={`flex items-center gap-2 p-4 mb-5 rounded-xl text-white ${getColor(
+                  link.platform
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {IconComponent && <IconComponent />}
+                {link.platform}
+                <span className="ml-auto">
+                  <FaArrowRight />
+                </span>
+              </a>
+            );
+          })}
         </div>
       </div>
     </div>
