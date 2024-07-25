@@ -11,6 +11,7 @@ interface SidebarProps {
   className?: string;
   padding?: string;
   shadow?: string;
+  Newlinks?: Array<any>;
 }
 
 const profile = {
@@ -25,6 +26,7 @@ export default function Sidebar({
   className,
   padding,
   shadow,
+  Newlinks,
 }: SidebarProps) {
   const pathname = usePathname();
   const [links, setLinks] = useState([
@@ -68,7 +70,7 @@ export default function Sidebar({
           <p className="text-grey mb-14">{profile.email}</p>
         </div>
         <div>
-          {links.map((link, index) => (
+          {Newlinks.map((link, index) => (
             <a
               key={index}
               href={link.url}
@@ -78,9 +80,7 @@ export default function Sidebar({
               target="_blank"
               rel="noopener noreferrer"
             >
-              <span>
-                <link.icon />
-              </span>
+              <span>{/* <link.icon /> */}</span>
               {link.platform}
               <span className="ml-auto">
                 <FaArrowRight />

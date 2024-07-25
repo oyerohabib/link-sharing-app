@@ -1,8 +1,11 @@
-import Link from "next/link";
+"use client";
 import React from "react";
+import Link from "next/link";
 import Sidebar from "../components/Sidebar";
+import { useAuth } from "@/app/context/AuthContext";
 
 const PreviewPage: React.FC = () => {
+  const { links } = useAuth();
   return (
     <div className="min-h-screen xs:bg-light-grey flex flex-col">
       <header className="w-full xs:h-[357px] p-6 xs:bg-purple rounded-[0_0_32px_32px] relative">
@@ -22,6 +25,7 @@ const PreviewPage: React.FC = () => {
         padding={"sm:py-12 sm:px-14 xs:py-8 xs:px-6 py-8"}
         className={"mx-auto relative xs:mt-[-170px]"}
         shadow={"xs:shadow-md"}
+        Newlinks={links}
       />
     </div>
   );

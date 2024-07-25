@@ -16,9 +16,9 @@ interface InputSelectProps {
 
 const socialMediaOptions = [
   { label: "Select a platform", value: "", icon: null },
-  { label: "GitHub", value: "github", icon: <FaGithub /> },
-  { label: "YouTube", value: "youtube", icon: <FaYoutube /> },
-  { label: "LinkedIn", value: "linkedin", icon: <FaLinkedin /> },
+  { label: "GitHub", value: "GitHub", icon: <FaGithub /> },
+  { label: "YouTube", value: "YouTube", icon: <FaYoutube /> },
+  { label: "LinkedIn", value: "LinkedIn", icon: <FaLinkedin /> },
   { label: "Codewars", value: "Codewars", icon: <SiCodewars /> },
   { label: "FreeCodeCamp", value: "FreeCodeCamp", icon: <FaFreeCodeCamp /> },
   { label: "Dev.to", value: "Dev.to", icon: <FaDev /> },

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import InputField from "./components/InputField";
@@ -9,10 +9,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Image from "next/image";
 import GetStarted from "/public/images/GetStarted.svg";
 import { FaGripLines } from "react-icons/fa";
-import { db } from "./firebase/clientApp";
 import { useAuth } from "./context/AuthContext";
 import { Link } from "@/app/types";
-import { fetchLinks, addLink, removeLink } from "./auth/lib/firebase";
+import { addLink, removeLink } from "./auth/lib/firebase";
 import { toast } from "react-toastify";
 import Spinner from "./components/Spinner";
 
@@ -23,8 +22,7 @@ const HomePage: React.FC = () => {
   //   { id: 3, platform: "LinkedIn", url: "https://linkedin.com/in/benwright" },
   // ]);
 
-  const { user } = useAuth();
-  const [links, setLinks] = useState<Link[]>([]);
+  const { user, setLinks, links } = useAuth();
   const [loading, setIsLoading] = useState(false);
   const [isRemovingLink, setIsRemovingLink] = useState(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -33,16 +31,6 @@ const HomePage: React.FC = () => {
   const addNewLink = () => {
     setIsEditing(true);
   };
-
-  useEffect(() => {
-    const getLinks = async () => {
-      if (user?.uid) {
-        const userLinks = await fetchLinks(db, user.uid);
-        setLinks(userLinks);
-      }
-    };
-    getLinks();
-  }, [user?.uid]);
 
   const handleAddLink = async () => {
     setIsLoading(true);
@@ -86,7 +74,7 @@ const HomePage: React.FC = () => {
       <div className="min-h-screen bg-light-grey p-4 sm:p-6">
         <Header />
         <main className="flex flex-col md:flex-row gap-6">
-          <Sidebar />
+          <Sidebar Newlinks={links} />
           <div className="w-full lg:w-3/5 py-4">
             <div className="bg-white p-6 sm:p-10 shadow-md rounded-xl">
               <h2 className="text-2xl sm:text-3xl font-bold text-dark-grey mb-4">

@@ -7,11 +7,11 @@ import {
   signOut,
   UserCredential,
 } from "firebase/auth";
-import { auth } from "@/app/firebase/clientApp";
+import { auth, db } from "@/app/firebase/clientApp";
 import Loading from "../components/Loading";
 import { useRouter } from "next/navigation";
-import { createUserDocument } from "../auth/lib/firebase";
-import { v4 as uuid } from "uuid";
+import { createUserDocument, fetchLinks } from "../auth/lib/firebase";
+import { Link } from "../types";
 
 interface UserType {
   email: string | null;
@@ -27,8 +27,8 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const newUuid = uuid();
   const router = useRouter();
+  const [links, setLinks] = useState<Link[]>([]);
   const [user, setUser] = useState<UserType>({ email: null, uid: null });
   const [loading, setLoading] = useState<Boolean>(true);
 
@@ -43,11 +43,20 @@ export const AuthContextProvider = ({
         setUser({ email: null, uid: null });
       }
     });
-
     setLoading(false);
 
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const getLinks = async () => {
+      if (user?.uid) {
+        const userLinks = await fetchLinks(db, user.uid);
+        setLinks(userLinks);
+      }
+    };
+    getLinks();
+  }, [user?.uid]);
 
   const signUp = async (email: string, password: string) => {
     try {
@@ -81,7 +90,9 @@ export const AuthContextProvider = ({
   };
 
   return (
-    <AuthContext.Provider value={{ user, signUp, logIn, logOut }}>
+    <AuthContext.Provider
+      value={{ user, signUp, logIn, logOut, links, setLinks }}
+    >
       {loading ? <Loading /> : children}
     </AuthContext.Provider>
   );

@@ -32,6 +32,7 @@ export const fetchLinks = async (db: any, userId: string): Promise<Link[]> => {
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
       console.log("links fetched successfully");
+      console.log(userDoc.data()?.links);
       return userDoc.data()?.links || [];
     } else {
       console.log("No such document!");

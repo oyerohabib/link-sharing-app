@@ -6,6 +6,7 @@ import { RiImage2Line } from "react-icons/ri";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase/clientApp";
+import { useAuth } from "../context/AuthContext";
 
 interface User {
   uid: string;
@@ -31,6 +32,7 @@ const saveUserInfo = async (db: any, user: User): Promise<void> => {
 };
 
 const ProfileDetailsPage: React.FC = () => {
+  const { links } = useAuth();
   const [profile, setProfile] = useState({
     firstName: "Ben",
     lastName: "Wright",
@@ -47,7 +49,7 @@ const ProfileDetailsPage: React.FC = () => {
       <div className="min-h-screen bg-light-grey p-4 sm:p-6">
         <Header />
         <main className="flex flex-col md:flex-row gap-6">
-          <Sidebar />
+          <Sidebar Newlinks={links} />
           <div className="w-full lg:w-3/5 py-4">
             <div className="bg-white p-6 sm:p-10 shadow-md rounded-xl">
               <h2 className="text-3xl font-bold text-dark-grey mb-4">
