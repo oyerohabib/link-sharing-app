@@ -16,15 +16,12 @@ import { toast } from "react-toastify";
 import Spinner from "./components/Spinner";
 
 const HomePage: React.FC = () => {
-  // const [links, setLinks] = useState([
-  //   { id: 1, platform: "GitHub", url: "https://github.com/benwright" },
-  //   { id: 2, platform: "YouTube", url: "https://youtube.com/benwright" },
-  //   { id: 3, platform: "LinkedIn", url: "https://linkedin.com/in/benwright" },
-  // ]);
-
   const { user, setLinks, links } = useAuth();
   const [loading, setIsLoading] = useState(false);
   const [isRemovingLink, setIsRemovingLink] = useState(false);
+  const [removingLinkIndex, setRemovingLinkIndex] = useState<number | null>(
+    null
+  );
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newLink, setNewLink] = useState<Link>({ platform: "", url: "" });
 
@@ -46,7 +43,8 @@ const HomePage: React.FC = () => {
     setIsLoading(false);
   };
 
-  const handleRemoveLink = async (platform: string) => {
+  const handleRemoveLink = async (platform: string, index: number) => {
+    setRemovingLinkIndex(index);
     const linkToRemove = links.find((link) => link.platform === platform);
     if (linkToRemove) {
       setIsRemovingLink(true);
@@ -54,6 +52,7 @@ const HomePage: React.FC = () => {
       setIsRemovingLink(false);
       toast.success("Link removed successfully.");
       setLinks(links.filter((link) => link.platform !== platform));
+      setRemovingLinkIndex(null);
     }
   };
 
@@ -103,9 +102,9 @@ const HomePage: React.FC = () => {
                       </span>
                       <span
                         className="cursor-pointer hover:underline"
-                        onClick={() => handleRemoveLink(link.platform)}
+                        onClick={() => handleRemoveLink(link.platform, index)}
                       >
-                        {isRemovingLink ? "removing..." : "Remove"}
+                        {removingLinkIndex === index ? "removing..." : "Remove"}
                       </span>
                     </div>
                     <InputSelect
