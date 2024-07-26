@@ -1,16 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { RiImage2Line } from "react-icons/ri";
 import ProtectedRoute from "../components/ProtectedRoute";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/clientApp";
 import { useAuth } from "../context/AuthContext";
-import { Link, User } from "../types";
+import { User } from "../types";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
-import { fetchUserProfile } from "../auth/lib/firebase";
 
 const updateUserProfile = async (
   userId: string,
@@ -39,27 +38,6 @@ const ProfileDetailsPage: React.FC = () => {
     lastName: "",
     email: user.email,
   });
-
-  useEffect(() => {
-    const getUserProfile = async () => {
-      if (user?.uid) {
-        try {
-          const userProfile = await fetchUserProfile(user.uid);
-          if (userProfile) {
-            setProfile((prevProfile) => ({
-              ...prevProfile,
-              ...userProfile,
-              email: user.email,
-            }));
-          }
-        } catch (error) {
-          console.error("Error fetching user profile: ", error);
-        }
-      }
-    };
-
-    getUserProfile();
-  }, [user?.uid, user?.email]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -119,7 +97,7 @@ const ProfileDetailsPage: React.FC = () => {
                     name="firstName"
                     className="py-3 px-4 border border-borders rounded w-1/2"
                     placeholder="Enter your first name"
-                    value={profile.firstName}
+                    value={user.firstName}
                     onChange={handleChange}
                   />
                 </div>
@@ -132,7 +110,7 @@ const ProfileDetailsPage: React.FC = () => {
                     name="lastName"
                     placeholder="Enter your last name"
                     className="py-3 px-4 border border-borders rounded w-1/2"
-                    value={profile.lastName}
+                    value={user.lastName}
                     onChange={handleChange}
                   />
                 </div>
@@ -144,7 +122,7 @@ const ProfileDetailsPage: React.FC = () => {
                     type="text"
                     name="email"
                     className="py-3 px-4 border border-borders rounded w-1/2 bg-gray-200"
-                    value={profile.email}
+                    value={user.email}
                     readOnly
                   />
                 </div>

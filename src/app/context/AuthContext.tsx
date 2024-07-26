@@ -51,10 +51,14 @@ export const AuthContextProvider = ({
   useEffect(() => {
     const getLinks = async () => {
       if (user?.uid) {
-        const { links: userLinks } = await getUserData(db, user.uid);
-        console.log("New userLinks", userLinks);
-
-        setLinks(userLinks);
+        const userData = await getUserData(db, user.uid);
+        if (userData) {
+          setUser((prevUser) => ({
+            ...prevUser,
+            ...userData,
+          }));
+          setLinks(userData.links || []);
+        }
       }
     };
     getLinks();

@@ -5,6 +5,7 @@ import { FaDev, FaCodepen, FaArrowRight } from "react-icons/fa";
 import { SiCodewars } from "react-icons/si";
 import { AiOutlineYoutube, AiFillLinkedin } from "react-icons/ai";
 import { usePathname } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
 
 interface SidebarProps {
   width?: string;
@@ -14,13 +15,6 @@ interface SidebarProps {
   Newlinks?: Array<any>;
 }
 
-const profile = {
-  firstName: "Ben",
-  lastName: "Wright",
-  email: "ben@example.com",
-  image: "/profile-image.jpg",
-};
-
 export default function Sidebar({
   width,
   className,
@@ -29,6 +23,7 @@ export default function Sidebar({
   Newlinks,
 }: SidebarProps) {
   const pathname = usePathname();
+  const { user } = useAuth();
 
   const mapPlatformToIcon = {
     GitHub: FiGithub,
@@ -52,8 +47,8 @@ export default function Sidebar({
       >
         <div className="mb-4 text-center">
           <div className="size-28 rounded-full bg-borders border-4 border-purple mx-auto mb-6"></div>
-          <h1 className="text-3xl text-dark-grey font-bold mb-2">{`${profile.firstName} ${profile.lastName}`}</h1>
-          <p className="text-grey mb-14">{profile.email}</p>
+          <h1 className="text-3xl text-dark-grey font-bold mb-2">{`${user.firstName} ${user.lastName}`}</h1>
+          <p className="text-grey mb-14">{user.email}</p>
         </div>
         <div>
           {Newlinks.map((link, index) => {
