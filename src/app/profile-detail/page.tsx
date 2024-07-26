@@ -1,47 +1,89 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { RiImage2Line } from "react-icons/ri";
 import ProtectedRoute from "../components/ProtectedRoute";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/clientApp";
 import { useAuth } from "../context/AuthContext";
+import { Link, User } from "../types";
+import { toast } from "react-toastify";
+import Spinner from "../components/Spinner";
+import { fetchUserProfile } from "../auth/lib/firebase";
 
-interface User {
-  uid: string;
-  firstName: string;
-  lastName: string;
-  profilePicture: string;
-  email: string;
-}
-
-const saveUserInfo = async (db: any, user: User): Promise<void> => {
+const updateUserProfile = async (
+  userId: string,
+  profile: User
+): Promise<void> => {
   try {
-    const userRef = doc(db, "users", user.uid);
-    await setDoc(userRef, {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      profilePicture: user.profilePicture,
-      email: user.email,
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, {
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      profilePicture: profile.profilePicture,
     });
-    console.log("User information saved successfully.");
+    console.log("User profile updated successfully.");
   } catch (error) {
-    console.error("Error saving user information: ", error);
+    console.error("Error updating user profile: ", error);
   }
 };
 
 const ProfileDetailsPage: React.FC = () => {
-  const { links } = useAuth();
+  const { links, user } = useAuth();
+  const [loading, setIsLoading] = useState(false);
+
   const [profile, setProfile] = useState({
-    firstName: "Ben",
-    lastName: "Wright",
-    email: "ben@example.com",
-    image: "/profile-image.jpg",
+    profilePicture: "",
+    firstName: "",
+    lastName: "",
+    email: user.email,
   });
 
-  const handleChange = (e: any) => {
-    setProfile((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  useEffect(() => {
+    const getUserProfile = async () => {
+      if (user?.uid) {
+        try {
+          const userProfile = await fetchUserProfile(user.uid);
+          if (userProfile) {
+            setProfile((prevProfile) => ({
+              ...prevProfile,
+              ...userProfile,
+              email: user.email,
+            }));
+          }
+        } catch (error) {
+          console.error("Error fetching user profile: ", error);
+        }
+      }
+    };
+
+    getUserProfile();
+  }, [user?.uid, user?.email]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      [name]: value,
+    }));
+  };
+
+  const handleSaveProfile = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      await updateUserProfile(user.uid, {
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        profilePicture: profile.profilePicture,
+      });
+      toast.success("Profile updated successfully.");
+    } catch (error) {
+      toast.error("Error updating Profile.");
+      console.error("Error updating profile: ", error);
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -67,7 +109,7 @@ const ProfileDetailsPage: React.FC = () => {
                   Image must be below 1024x1024px. <br /> Use PNG or JPG format.
                 </div>
               </div>
-              <div className="bg-light-grey rounded-lg p-5">
+              <form className="bg-light-grey rounded-lg p-5">
                 <div className="flex items-center mb-4">
                   <label className="mb-2 w-1/2 text-grey">
                     First Name<sup>*</sup>
@@ -76,7 +118,7 @@ const ProfileDetailsPage: React.FC = () => {
                     type="text"
                     name="firstName"
                     className="py-3 px-4 border border-borders rounded w-1/2"
-                    placeholder="e.g "
+                    placeholder="Enter your first name"
                     value={profile.firstName}
                     onChange={handleChange}
                   />
@@ -88,8 +130,10 @@ const ProfileDetailsPage: React.FC = () => {
                   <input
                     type="text"
                     name="lastName"
+                    placeholder="Enter your last name"
                     className="py-3 px-4 border border-borders rounded w-1/2"
                     value={profile.lastName}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="flex items-center mb-4">
@@ -99,11 +143,18 @@ const ProfileDetailsPage: React.FC = () => {
                   <input
                     type="text"
                     name="email"
-                    className="py-3 px-4 border border-borders rounded w-1/2"
+                    className="py-3 px-4 border border-borders rounded w-1/2 bg-gray-200"
                     value={profile.email}
+                    readOnly
                   />
                 </div>
-              </div>
+                <button
+                  className="px-6 py-3 bg-purple text-white rounded-lg flex ml-auto"
+                  onClick={handleSaveProfile}
+                >
+                  {loading ? <Spinner /> : "Save"}
+                </button>
+              </form>
             </div>
           </div>
         </main>

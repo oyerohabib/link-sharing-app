@@ -1,5 +1,5 @@
 import { db } from "@/app/firebase/clientApp";
-import { Link, User } from "@/app/types";
+import { Link, User, UserData } from "@/app/types";
 import {
   arrayRemove,
   arrayUnion,
@@ -26,21 +26,25 @@ export const createUserDocument = async (user: User) => {
   }
 };
 
-export const fetchLinks = async (db: any, userId: string): Promise<Link[]> => {
+export const getUserData = async (
+  db: any,
+  userId: string
+): Promise<UserData> => {
+  // update fn name to getUserData
   try {
     const userRef = doc(db, "users", userId);
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
       console.log("links fetched successfully");
-      console.log(userDoc.data()?.links);
-      return userDoc.data()?.links || [];
+      console.log(userDoc.data());
+      return userDoc.data() || {};
     } else {
       console.log("No such document!");
-      return [];
+      return {};
     }
   } catch (error) {
     console.error("Error fetching links: ", error);
-    return [];
+    return {};
   }
 };
 
@@ -65,5 +69,21 @@ export const removeLink = async (userId: string, link: Link): Promise<void> => {
     console.log("Link removed successfully.");
   } catch (error) {
     console.error("Error removing link: ", error);
+  }
+};
+
+export const fetchUserProfile = async (userId: string) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      console.log("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching user profile: ", error);
+    throw error;
   }
 };

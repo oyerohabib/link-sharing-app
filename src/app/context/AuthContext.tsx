@@ -10,7 +10,7 @@ import {
 import { auth, db } from "@/app/firebase/clientApp";
 import Loading from "../components/Loading";
 import { useRouter } from "next/navigation";
-import { createUserDocument, fetchLinks } from "../auth/lib/firebase";
+import { createUserDocument, getUserData } from "../auth/lib/firebase";
 import { Link } from "../types";
 
 interface UserType {
@@ -51,7 +51,9 @@ export const AuthContextProvider = ({
   useEffect(() => {
     const getLinks = async () => {
       if (user?.uid) {
-        const userLinks = await fetchLinks(db, user.uid);
+        const { links: userLinks } = await getUserData(db, user.uid);
+        console.log("New userLinks", userLinks);
+
         setLinks(userLinks);
       }
     };
