@@ -7,7 +7,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/clientApp";
 import { useAuth } from "../context/AuthContext";
-import { User } from "../types";
+import { User, UserData } from "../types";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 
@@ -22,21 +22,20 @@ const updateUserProfile = async (
       lastName: profile.lastName,
       profilePicture: profile.profilePicture,
     });
-    console.log("User profile updated successfully.");
   } catch (error) {
     console.error("Error updating user profile: ", error);
   }
 };
 
 const ProfileDetailsPage: React.FC = () => {
-  const { links, user } = useAuth();
+  const { links, user, setUser } = useAuth();
   const [loading, setIsLoading] = useState(false);
 
   const [profile, setProfile] = useState({
-    profilePicture: "",
-    firstName: "",
-    lastName: "",
-    email: user.email,
+    profilePicture: user.profilePicture || "",
+    firstName: user.firstName || "",
+    lastName: user.lastName || "",
+    email: user.email || "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,10 +55,15 @@ const ProfileDetailsPage: React.FC = () => {
         lastName: profile.lastName,
         profilePicture: profile.profilePicture,
       });
+      setUser((prevUser: UserData) => ({
+        ...prevUser,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        profilePicture: profile.profilePicture,
+      }));
       toast.success("Profile updated successfully.");
     } catch (error) {
       toast.error("Error updating Profile.");
-      console.error("Error updating profile: ", error);
     }
     setIsLoading(false);
   };
@@ -97,7 +101,7 @@ const ProfileDetailsPage: React.FC = () => {
                     name="firstName"
                     className="py-3 px-4 border border-borders rounded w-1/2"
                     placeholder="Enter your first name"
-                    value={user.firstName}
+                    value={profile.firstName}
                     onChange={handleChange}
                   />
                 </div>
@@ -110,7 +114,7 @@ const ProfileDetailsPage: React.FC = () => {
                     name="lastName"
                     placeholder="Enter your last name"
                     className="py-3 px-4 border border-borders rounded w-1/2"
-                    value={user.lastName}
+                    value={profile.lastName}
                     onChange={handleChange}
                   />
                 </div>
@@ -122,7 +126,7 @@ const ProfileDetailsPage: React.FC = () => {
                     type="text"
                     name="email"
                     className="py-3 px-4 border border-borders rounded w-1/2 bg-gray-200"
-                    value={user.email}
+                    value={profile.email}
                     readOnly
                   />
                 </div>

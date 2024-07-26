@@ -63,8 +63,6 @@ const HomePage: React.FC = () => {
   };
 
   const handleNewLinkChange = (field: string, value: string) => {
-    console.log(field, value);
-    console.log("newLink", newLink);
     setNewLink({ ...newLink, [field]: value });
   };
 

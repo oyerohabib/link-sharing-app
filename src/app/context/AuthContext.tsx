@@ -97,7 +97,7 @@ export const AuthContextProvider = ({
 
   return (
     <AuthContext.Provider
-      value={{ user, signUp, logIn, logOut, links, setLinks }}
+      value={{ user, setUser, signUp, logIn, logOut, links, setLinks }}
     >
       {loading ? <Loading /> : children}
     </AuthContext.Provider>

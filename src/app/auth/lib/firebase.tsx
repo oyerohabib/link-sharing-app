@@ -20,7 +20,6 @@ export const createUserDocument = async (user: User) => {
       uid: user.uid,
       profilePicture: user.profilePicture,
     });
-    console.log("User document created successfully.");
   } catch (error) {
     console.error("Error creating user document: ", error);
   }
@@ -35,8 +34,6 @@ export const getUserData = async (
     const userRef = doc(db, "users", userId);
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
-      console.log("links fetched successfully");
-      console.log(userDoc.data());
       return userDoc.data() || {};
     } else {
       console.log("No such document!");
@@ -54,7 +51,6 @@ export const addLink = async (userId: string, link: Link): Promise<void> => {
     await updateDoc(userRef, {
       links: arrayUnion(link),
     });
-    console.log("Link added successfully.");
   } catch (error) {
     console.error("Error adding link: ", error);
   }
@@ -66,7 +62,6 @@ export const removeLink = async (userId: string, link: Link): Promise<void> => {
     await updateDoc(userRef, {
       links: arrayRemove(link),
     });
-    console.log("Link removed successfully.");
   } catch (error) {
     console.error("Error removing link: ", error);
   }
