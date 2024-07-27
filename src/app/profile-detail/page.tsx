@@ -105,17 +105,31 @@ const ProfileDetailsPage: React.FC = () => {
               <div className="bg-light-grey rounded-lg p-5 mb-6 flex flex-col gap-4 md:gap-2 md:flex-row md:items-center justify-between">
                 <div className="text-grey flex-1">Profile picture</div>
                 <div
-                  className="bg-light-purple text-purple font-semibold flex flex-2 lg:flex-1 flex-col items-center justify-center rounded-lg py-8 px-4 size-[193px] md:ml-auto text-center cursor-pointer"
+                  className="bg-light-purple text-purple font-semibold flex flex-2 lg:flex-1 flex-col items-center justify-center rounded-lg py-8 px-4 size-[193px] md:ml-auto text-center cursor-pointer relative"
                   onClick={handleClick}
+                  style={{
+                    backgroundImage: profile.profilePicture
+                      ? `url(${profile.profilePicture})`
+                      : "none",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
                 >
-                  <RiImage2Line className="w-8 h-7 mb-2" />
+                  {!profile.profilePicture && (
+                    <RiImage2Line className="w-8 h-7 mb-2" />
+                  )}
+                  <span className="relative z-10">
+                    {profile.profilePicture ? "Update Image" : "+ Upload Image"}
+                  </span>
                   <input
                     type="file"
                     ref={fileInputRef}
                     onChange={handleFileChange}
                     style={{ display: "none" }}
                   />
-                  + Upload Image
+                  {profile.profilePicture && (
+                    <div className="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
+                  )}
                 </div>
                 <div className="text-xs text-grey flex-1 md:mr-auto md:p-6">
                   Image must be below 1024x1024px. <br /> Use PNG or JPG format.
