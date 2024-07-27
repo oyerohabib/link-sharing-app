@@ -8,6 +8,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const createUserDocument = async (user: User) => {
   try {
@@ -81,4 +82,17 @@ export const fetchUserProfile = async (userId: string) => {
     console.error("Error fetching user profile: ", error);
     throw error;
   }
+};
+
+const storage = getStorage();
+
+export const uploadImage = async (
+  file: File,
+  userId: string
+): Promise<string> => {
+  const storageRef = ref(storage, `profilePictures/${userId}/${file.name}`);
+  await uploadBytes(storageRef, file);
+  const url = await getDownloadURL(storageRef);
+  console.log("url", url);
+  return url;
 };

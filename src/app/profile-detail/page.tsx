@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { RiImage2Line } from "react-icons/ri";
@@ -10,6 +10,7 @@ import { useAuth } from "../context/AuthContext";
 import { User, UserData } from "../types";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
+import { uploadImage } from "../auth/lib/firebase";
 
 const updateUserProfile = async (
   userId: string,
@@ -30,6 +31,8 @@ const updateUserProfile = async (
 const ProfileDetailsPage: React.FC = () => {
   const { links, user, setUser } = useAuth();
   const [loading, setIsLoading] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [profile, setProfile] = useState({
     profilePicture: user.profilePicture || "",
@@ -46,26 +49,43 @@ const ProfileDetailsPage: React.FC = () => {
     }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+    console.log(setFile(e.target.files[0]));
+  };
+
   const handleSaveProfile = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLoading(true);
     try {
+      let profilePictureUrl = profile.profilePicture;
+      if (file) {
+        profilePictureUrl = await uploadImage(file, user.uid);
+        console.log("profilePictureUrl", profilePictureUrl);
+      }
+
       await updateUserProfile(user.uid, {
         firstName: profile.firstName,
         lastName: profile.lastName,
-        profilePicture: profile.profilePicture,
+        profilePicture: profilePictureUrl,
       });
       setUser((prevUser: UserData) => ({
         ...prevUser,
         firstName: profile.firstName,
         lastName: profile.lastName,
-        profilePicture: profile.profilePicture,
+        profilePicture: profilePictureUrl,
       }));
       toast.success("Profile updated successfully.");
     } catch (error) {
       toast.error("Error updating Profile.");
     }
     setIsLoading(false);
+  };
+
+  const handleClick = () => {
+    fileInputRef.current?.click();
   };
 
   return (
@@ -84,8 +104,18 @@ const ProfileDetailsPage: React.FC = () => {
               </p>
               <div className="bg-light-grey rounded-lg p-5 mb-6 flex flex-col gap-4 md:gap-2 md:flex-row md:items-center justify-between">
                 <div className="text-grey flex-1">Profile picture</div>
-                <div className="bg-light-purple text-purple font-semibold flex flex-2 lg:flex-1 flex-col items-center justify-center rounded-lg py-8 px-4 size-[193px] md:ml-auto text-center">
-                  <RiImage2Line className="w-8 h-7 mb-2" />+ Upload Image
+                <div
+                  className="bg-light-purple text-purple font-semibold flex flex-2 lg:flex-1 flex-col items-center justify-center rounded-lg py-8 px-4 size-[193px] md:ml-auto text-center cursor-pointer"
+                  onClick={handleClick}
+                >
+                  <RiImage2Line className="w-8 h-7 mb-2" />
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    style={{ display: "none" }}
+                  />
+                  + Upload Image
                 </div>
                 <div className="text-xs text-grey flex-1 md:mr-auto md:p-6">
                   Image must be below 1024x1024px. <br /> Use PNG or JPG format.
