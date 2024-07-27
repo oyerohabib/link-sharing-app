@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { RiImage2Line } from "react-icons/ri";
@@ -34,6 +34,13 @@ const ProfileDetailsPage: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  useEffect(() => {
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      profilePicture: user.profilePicture,
+    }));
+  }, [user.profilePicture]);
+
   const [profile, setProfile] = useState({
     profilePicture: user.profilePicture || "",
     firstName: user.firstName || "",
@@ -51,9 +58,15 @@ const ProfileDetailsPage: React.FC = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+
+      const tempUrl = URL.createObjectURL(selectedFile);
+      setProfile((prevProfile) => ({
+        ...prevProfile,
+        profilePicture: tempUrl,
+      }));
     }
-    console.log(setFile(e.target.files[0]));
   };
 
   const handleSaveProfile = async (e: React.MouseEvent<HTMLButtonElement>) => {
