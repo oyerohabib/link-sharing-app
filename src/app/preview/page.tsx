@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchUserProfile } from "@/app/auth/lib/firebase";
-import { useAuth } from "@/app/context/AuthContext";
 import Loading from "../components/Loading";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 const PreviewPage: React.FC = () => {
   const router = useRouter();
@@ -14,6 +14,18 @@ const PreviewPage: React.FC = () => {
 
   const [userProfile, setUserProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
+  const copyPreviewUrl = (userId: string) => {
+    const previewUrl = `${window.location.origin}/preview/${userId}`;
+    navigator.clipboard
+      .writeText(previewUrl)
+      .then(() => {
+        toast.success("Profile URL has been copied.");
+      })
+      .catch((error) => {
+        toast.error("Error copying URL:", error);
+      });
+  };
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -64,7 +76,10 @@ const PreviewPage: React.FC = () => {
             Back to Editor
           </button>
           {/* </Link> */}
-          <button className="ml-4 px-4 py-2 bg-purple text-white rounded-lg">
+          <button
+            className="ml-4 px-4 py-2 bg-purple text-white rounded-lg"
+            onClick={() => copyPreviewUrl(userId)}
+          >
             Share Link
           </button>
         </div>
