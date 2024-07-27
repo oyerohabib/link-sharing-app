@@ -93,6 +93,5 @@ export const uploadImage = async (
   const storageRef = ref(storage, `profilePictures/${userId}/${file.name}`);
   await uploadBytes(storageRef, file);
   const url = await getDownloadURL(storageRef);
-  console.log("url", url);
   return url;
 };

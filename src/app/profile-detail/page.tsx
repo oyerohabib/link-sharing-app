@@ -76,7 +76,6 @@ const ProfileDetailsPage: React.FC = () => {
       let profilePictureUrl = profile.profilePicture;
       if (file) {
         profilePictureUrl = await uploadImage(file, user.uid);
-        console.log("profilePictureUrl", profilePictureUrl);
       }
 
       await updateUserProfile(user.uid, {

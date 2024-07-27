@@ -10,7 +10,7 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
   const pathname = usePathname();
-  const { logOut } = useAuth();
+  const { logOut, user } = useAuth();
   return (
     <header className="flex items-center justify-between p-4 bg-white shadow-md rounded-xl">
       <div className="flex items-center">
@@ -57,7 +57,7 @@ export default function Header() {
       </div>
       <div className="flex items-center gap-2">
         <Link
-          href="/preview"
+          href={`/preview?userId=${user.uid}`}
           className="flex items-center gap-2 md:px-4 md:py-2 xs:px-3 xs:py-1 p-[11px_16px] text-purple text-base font-semibold rounded-lg border border-purple hover:bg-light-purple transition duration-200"
         >
           <span>
