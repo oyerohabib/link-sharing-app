@@ -20,7 +20,7 @@ const socialMediaOptions = [
   { label: "LinkedIn", value: "LinkedIn", icon: <FaLinkedin /> },
   { label: "Codewars", value: "Codewars", icon: <SiCodewars /> },
   { label: "FreeCodeCamp", value: "FreeCodeCamp", icon: <FaFreeCodeCamp /> },
-  { label: "Dev.to", value: "Dev.to", icon: <FaDev /> },
+  { label: "Dev.To", value: "Dev.To", icon: <FaDev /> },
 ];
 
 const InputSelect: React.FC<InputSelectProps> = ({
