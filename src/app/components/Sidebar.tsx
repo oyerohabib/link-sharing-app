@@ -46,15 +46,17 @@ export default function Sidebar({
         } rounded-xl md:p-10`}
       >
         <div className="mb-4 text-center">
-          <div className="size-28 rounded-full bg-borders border-4 border-purple mx-auto mb-6">
-            <Image
-              src={user.profilePicture}
-              alt="users profile picture"
-              width={28}
-              height={28}
-              className="w-full h-full rounded-full"
-            />
-          </div>
+          {user?.profilePicture && (
+            <div className="size-28 rounded-full bg-borders border-4 border-purple mx-auto mb-6">
+              <Image
+                src={decodeURIComponent(user.profilePicture)}
+                alt="users profile picture"
+                width={28}
+                height={28}
+                className="w-full h-full rounded-full"
+              />
+            </div>
+          )}
           <h1 className="text-3xl text-dark-grey font-bold mb-2">{`${user.firstName} ${user.lastName}`}</h1>
           <p className="text-grey mb-14">{user.email}</p>
         </div>

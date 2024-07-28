@@ -119,7 +119,7 @@ export default function Register() {
               </button>
             </div>
           </form>
-          <div className="flex justify-center mt-4 text-base font-normal">
+          <div className="flex justify-center flex-wrap gap-1 mt-4 text-base font-normal">
             <span className="text-grey">Already have an account?&nbsp;</span>
             <Link href="/auth/login" className="text-purple hover:underline">
               Login

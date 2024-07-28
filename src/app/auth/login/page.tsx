@@ -93,7 +93,7 @@ export default function Login() {
               </button>
             </div>
           </form>
-          <div className="flex justify-center mt-4 text-base font-normal">
+          <div className="flex flex-wrap gap-1 justify-center mt-4 text-base font-normal">
             <span className="text-grey">Don’t have an account?&nbsp;</span>
             <Link href="/auth/register" className="text-purple hover:underline">
               Create account
