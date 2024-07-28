@@ -37,7 +37,7 @@ export default function Sidebar({
   return (
     <div
       className={`py-4 ${width ? width : "w-full lg:w-2/5"} ${className} ${
-        pathname === "/preview" ? "" : "lg:flex hidden"
+        pathname.startsWith("/preview") ? "" : "lg:flex hidden"
       }`}
     >
       <div
