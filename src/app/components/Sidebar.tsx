@@ -49,7 +49,7 @@ export default function Sidebar({
           {user?.profilePicture && (
             <div className="size-28 rounded-full bg-borders border-4 border-purple mx-auto mb-6">
               <Image
-                src={decodeURIComponent(user.profilePicture)}
+                src={user.profilePicture}
                 alt="users profile picture"
                 width={28}
                 height={28}
