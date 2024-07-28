@@ -1,5 +1,4 @@
 "use client";
-import React, { useState } from "react";
 import { FiGithub } from "react-icons/fi";
 import { FaDev, FaCodepen, FaArrowRight } from "react-icons/fa";
 import { SiCodewars } from "react-icons/si";

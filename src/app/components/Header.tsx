@@ -57,7 +57,7 @@ export default function Header() {
       </div>
       <div className="flex items-center gap-2">
         <Link
-          href={`/preview?userId=${user.uid}`}
+          href={`/preview`}
           className="flex items-center gap-2 md:px-4 md:py-2 xs:px-3 xs:py-1 p-[11px_16px] text-purple text-base font-semibold rounded-lg border border-purple hover:bg-light-purple transition duration-200"
         >
           <span>
