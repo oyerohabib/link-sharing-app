@@ -43,7 +43,7 @@ export default function Sidebar({
       <div
         className={`${padding} w-full bg-white ${
           shadow ? shadow : "shadow-md"
-        } rounded-xl p-10`}
+        } rounded-xl md:p-10`}
       >
         <div className="mb-4 text-center">
           <div className="size-28 rounded-full bg-borders border-4 border-purple mx-auto mb-6">

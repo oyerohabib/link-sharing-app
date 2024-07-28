@@ -36,7 +36,7 @@ const ProfilePreview = ({ user, links }) => {
           ) : (
             <Link href={"/auth/register"}>
               <button className="px-4 py-2 border border-purple text-purple rounded-lg hover:bg-light-purple transition duration-200">
-                Create an Account
+                Create account
               </button>
             </Link>
           )}
